@@ -1,0 +1,24 @@
+{
+  "name": "USS TAKAMATSU Youtube List",
+  "short_name": "USS TAKAMATSU",
+  "description": "UNITED SS TAKAMATSU の YouTube 再生リスト一覧",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f0f8ff",
+  "theme_color": "#000000",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

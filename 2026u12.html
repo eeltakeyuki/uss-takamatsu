@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USS TAKAMATSU Youtube List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff; /* */
+            font-size: 16px;
+        }
+
+        /* ヘッダー */
+        .header {
+            background-color: #003F8E;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header img {
+            height: 45px;
+            vertical-align: middle;
+        }
+
+        /* --- スライドショーのスタイル --- */
+        .slideshow-container {
+            width: 100%;
+            max-width: 900px;
+            height: 250px; /* スマホ用高さ */
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out; /* フェード速度 */
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* コンテンツエリア */
+        .content {
+            padding: 15px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* セクション見出し */
+        .section {
+            margin-bottom: 35px;
+        }
+        .section h2 {
+            font-size: 22px;
+            color: #003F8E;
+            margin: 0 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 3px solid #87cefa;
+            display: flex;
+            align-items: center;
+        }
+        .section h2 .icon {
+            margin-right: 10px;
+        }
+
+        /* グリッドレイアウト */
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 20px;
+        }
+
+        .video-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            padding-bottom: 12px;
+        }
+
+        .video-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .video-title {
+            font-weight: bold;
+            color: #003F8E;
+            margin: 12px 10px 0 10px;
+        }
+
+        .video-title a {
+            text-decoration: none;
+            color: #003F8E;
+            display: block;
+        }
+
+        /* レスポンシブ対応 */
+        @media (min-width: 650px) {
+            .slideshow-container { height: 400px; } /* PC・タブレット用高さ */
+            .video-grid { grid-template-columns: repeat(2, 1fr); }
+            .header img { height: 55px; }
+        }
+        
+        @media (min-width: 1024px) {
+            .video-grid { grid-template-columns: repeat(3, 1fr); }
+            .header img { height: 65px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://storage.googleapis.com/eeltakeyuki_bucket/usslogo.png" alt="USS TAKAMATSU Logo">
+    </div>
+
+    <div id="slideshow" class="slideshow-container"></div>
+    
+    <div class="content" id="main-content"></div>
+
+    <script>
+        // --- スライドショー用JSONデータ ---
+        const slideshowData = [
+            { url: "https://storage.googleapis.com/eeltakeyuki_bucket/thumbnail/4669.jpg" },
+            { url: "https://storage.googleapis.com/eeltakeyuki_bucket/thumbnail/S__175636498_0.jpg" },
+            { url: "https://storage.googleapis.com/eeltakeyuki_bucket/thumbnail/S__175636498_0.jpg" },
+            { url: "https://storage.googleapis.com/eeltakeyuki_bucket/thumbnail/S__175636495_0.jpg" },
+            { url: "https://storage.googleapis.com/eeltakeyuki_bucket/thumbnail/S__175636496_0.jpg" }
+        ];
+        // --- 再生リスト用データ ---
+        const data = [
+            {
+                tab: "再生リスト",
+                lists: [
+                    { id: "PLx5S7JmptoKmLnSkwFGiEJ0-Btsh7hx_Q", title: "Team Cam" },
+                    { id: "PLx5S7JmptoKlHn9R6ew0qMBjbp_CFlxyl", title: "JFA 第49回 全日本U-12サッカー選手権大会 香川県大会" },
+                    { id: "PLx5S7JmptoKl3YyOt4Wp910oBrQHMi7N7", title: "2025 U-12 香川県ジュニアサッカーリーグ" },
+                    { id: "PLx5S7JmptoKnUFNvZf7zpV_t4_B9W9YA-", title: "2025 BLUEDE交流会" },
+                    { id: "PLx5S7JmptoKkrEUbuEYZCa-nvBg7pvq4o", title: "2025 チビリンピック in 四国" },
+                    { id: "PLx5S7JmptoKmQX6S8CsQXjFRUPMz_IGi3", title: "2025 U-11 ジュニアチャンピオンシップ" },
+                    { id: "PLx5S7JmptoKmjuJauNVe-CPtgt9pLyGua", title: "2024 U-11 高松市夏季サッカー大会" },
+                    { id: "PLx5S7JmptoKlIa77gvXHGZRiUUPKGLvy1", title: "2024 U-11 香川県ジュニアサッカーリーグ（後期）" },
+                ]
+            }
+        ];
+
+        // スライドショーの初期化と実行
+        function initSlideshow() {
+            const container = document.getElementById('slideshow');
+            if (slideshowData.length === 0) return;
+
+            // スライド要素の作成
+            slideshowData.forEach((item, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'slide' + (index === 0 ? ' active' : '');
+                slide.style.backgroundImage = `url('${item.url}')`;
+                container.appendChild(slide);
+            });
+
+            // 切り替えロジック
+            let currentIndex = 0;
+            const slides = document.querySelectorAll('.slide');
+
+            setInterval(() => {
+                slides[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % slides.length;
+                slides[currentIndex].classList.add('active');
+            }, 4000); // 4秒ごとに切り替え
+        }
+
+        // ページコンテンツの生成
+        function renderPage() {
+            const container = document.getElementById('main-content');
+            
+            data.forEach(sectionData => {
+                const sectionEl = document.createElement('section');
+                sectionEl.className = 'section';
+                const icon = sectionData.tab.includes('年') ? '📅' : (sectionData.tab === 'おすすめ再生リスト' ? '⭐' : '▶️');
+                sectionEl.innerHTML = `<h2><span class="icon">${icon}</span>${sectionData.tab}</h2>`;
+
+                const gridEl = document.createElement('div');
+                gridEl.className = 'video-grid';
+
+                sectionData.lists.forEach(list => {
+                    const thumbUrl = `https://storage.googleapis.com/eeltakeyuki_bucket/thumbnail/${list.id}.jpg`;
+                    const playlistUrl = `https://www.youtube.com/playlist?list=${list.id}`;
+
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'video-item';
+                    itemEl.innerHTML = `
+                        <a href="${playlistUrl}" target="_blank">
+                            <img src="${thumbUrl}" alt="${list.title}" onerror="this.src='https://storage.googleapis.com/eeltakeyuki_bucket/thumbnail/default.jpg';">
+                        </a>
+                        <div class="video-title">
+                            <a href="${playlistUrl}" target="_blank">${list.title}</a>
+                        </div>
+                    `;
+                    gridEl.appendChild(itemEl);
+                });
+
+                sectionEl.appendChild(gridEl);
+                container.appendChild(sectionEl);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initSlideshow();
+            renderPage();
+        });
+    </script>
+</body>
+</html>

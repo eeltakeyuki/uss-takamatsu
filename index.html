@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USS TAKAMATSU Youtube List</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#003F8E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="USS TAKAMATSU">
+    <link rel="apple-touch-icon" href="favicon-192x192.png">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            font-size: 14px;
+        }
+        .header {
+            background-color: #003F8E;
+            color: white;
+            padding: 10px 10px 10px 10px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header img {
+            height: 40px;
+            vertical-align: middle;
+        }
+        .content {
+            padding: 10px;
+        }
+        .section {
+            margin-bottom: 15px;
+        }
+        .section h2 {
+            font-size: 20px;
+            color: #003F8E;
+            margin: 0 0 5px 10px;
+            padding-bottom: 3px;
+            border-bottom: 3px solid #87cefa;
+            display: flex;
+            align-items: center;
+        }
+        .section h2 .icon {
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+
+        /* 横スクロールリスト */
+        .horizontal-video-list {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: #4682b4 #f0f8ff;
+        }
+        .horizontal-video-list::-webkit-scrollbar {
+            height: 8px;
+        }
+        .horizontal-video-list::-webkit-scrollbar-thumb {
+            background: #4682b4;
+            border-radius: 4px;
+        }
+        .horizontal-video-list::-webkit-scrollbar-track {
+            background: #f0f8ff;
+        }
+
+        /* 通常の動画アイテム */
+        .video-item {
+            flex: 0 0 auto;
+            width: 160px;
+            text-align: center;
+        }
+
+        /* おすすめ動画の大きなアイテム */
+        .featured-scroll-item {
+            flex: 0 0 auto;
+            width: 360px;
+            text-align: center;
+        }
+
+        .video-item img,
+        .featured-scroll-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .video-item img:hover,
+        .featured-scroll-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .video-title {
+            font-weight: bold;
+            color: #003F8E;
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+
+        .video-item .video-title {
+            height: 2.6em;
+            line-height: 1.3em;
+            overflow: hidden;
+        }
+
+        .featured-scroll-item .video-title {
+            font-size: 15px;
+        }
+
+        .video-title a {
+            text-decoration: none;
+            color: #003F8E;
+        }
+        .video-title a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- レスポンシブ対応 --- */
+        @media (min-width: 600px) {
+            .header img {
+                height: 60px;
+            }
+            .video-item {
+                width: 200px;
+            }
+            .featured-scroll-item {
+                width: 450px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .header img {
+                height: 70px;
+            }
+            .video-item {
+                width: 230px;
+            }
+            .featured-scroll-item {
+                width: 520px;
+            }
+            body {
+                font-size: 16px;
+            }
+            .section h2 {
+                font-size: 24px;
+            }
+            .featured-scroll-item .video-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="usslogo.png" alt="USS TAKAMATSU Logo">
+    </div>
+    <div class="content"></div>
+
+    <script>
+        // ★ データ構造を修正。「おすすめ動画」を新設し、「エンタメ動画」を復活
+
+        const data = [
+                {
+                    tab: "おすすめ再生リスト",
+                    lists: [
+                        { id: "PLx5S7JmptoKk16VNdNjbMvm-ixl3B_aVT", title: "Team Cam" },
+                        { id: "PLCKHspXorDj8", title: "2026 U-12 高松地区ジュニアサッカー大会" },
+                        { id: "PLeaZ4ybTu_Hs", title: "JFAバーモントカップ第36回全日本U-12フットサル選手権大会 香川県大会" },
+                        { id: "PLx5S7JmptoKny3zAuDV9e4_sgNM1fo9fO", title: "2026 チビリンピック in 四国" },
+                        { id: "PLx5S7JmptoKllPt0C29ny2YIyJV15Pw9X", title: "2026 U-11 ジュニアチャンピオンシップ"  },
+                        { id: "PLx5S7JmptoKmhL2TuznBfv98VDGPREBsS", title: "クーバー・カップ2025 U-11サッカー選手権大会" },
+                        { id: "PLx5S7JmptoKkrEUbuEYZCa-nvBg7pvq4o", title: "2025 チビリンピック in 四国" },
+                        { id: "PLx5S7JmptoKlqn9ZdLmZLlqTGPSRvrMQh", title: "2025 U-10 高松市小学生サッカー大会" },
+                        { id: "PLx5S7JmptoKmMRLPoqxPyA9pdBmdHvZn0", title: "2024 U-10 高松北ロータリー杯" },
+                        { id: "PLx5S7JmptoKmQIEIXyytnGojHiIpXMI7R", title: "2024 U-10 高松地区ジュニアサッカー大会" },
+                        { id: "PLx5S7JmptoKlxxqQsvQPmb8n6VpZU1r2L", title: "2024 U-10 瀬戸大橋記念公園カップ" },
+                    ]
+                },
+                {
+                    tab: "2026年度（U-12）",
+                    lists: [
+                        { id: "PLQh5ExeFOUCY&si=dxUrBChuBlPwPNRi", title: "2026 UNITED SS TAKAMATSU" },
+                        { id: "PLe0U0Svp1DSg&si=KTgdncwJcTLSIlvl", title: "第10回 大阪・泉州ドリームカップ 夏の陣" },
+                        { id: "PLCKHspXorDj8", title: "2026 U-12 高松地区ジュニアサッカー大会" },
+                        { id: "PLeaZ4ybTu_Hs", title: "JFAバーモントカップ第36回全日本U-12フットサル選手権大会 香川県大会" },
+                        { id: "PLx5S7JmptoKlVmuS5p-KrUZgdBFA405_h", title: "2026 U-12 香川県ジュニアサッカーリーグ（前期）" },
+                        { id: "PLx5S7JmptoKny3zAuDV9e4_sgNM1fo9fO", title: "2026 チビリンピック in 四国" },
+                    ]
+                },
+                {
+                    tab: "2025年度（U-11）",
+                    lists: [
+                        { id: "PLx5S7JmptoKlERNiJ4_4736LIRD5n03sp", title: "2025 UNITED SS TAKAMATSU" },
+                        { id: "PLx5S7JmptoKlg8_8Hj1OQAs5x7H6StEX8", title: "2026 U-11 ROSAS WINTER MATCH"  },
+                        { id: "PLx5S7JmptoKmoOvryLPBXic_Dxh38ATrO", title: "2026 U-11 BONOS CUP"  },
+                        { id: "PLx5S7JmptoKllPt0C29ny2YIyJV15Pw9X", title: "2026 U-11 ジュニアチャンピオンシップ"  },
+                        { id: "PLx5S7JmptoKlbtEkiYYRGvHl__BoS5rRD", title: "2026 U-12 ジュニアチャンピオンシップ"  },
+                        { id: "PLx5S7JmptoKkWK_X1G5LkxUpQVS5nGp2G", title: "2026 U-12 高松市小学生サッカー大会"  },
+                        { id: "PLx5S7JmptoKnJF8C0Rk0gJlv3QpAOtCe7", title: "2026 U-11 RINKU新春杯"  },
+                        { id: "PLx5S7JmptoKnEkbdlvhTubOBRaB8jKSf-", title: "2025 U-11 Amigas de futbol 坂出" },
+                        { id: "PLx5S7JmptoKmXLIymfn_VATXKHeorz_u-", title: "2025 U-11 香川県ジュニアサッカーリーグ" },
+                        { id: "PLx5S7JmptoKlHn9R6ew0qMBjbp_CFlxyl", title: "JFA 第49回 全日本U-12サッカー選手権大会 香川県大会" },
+                        { id: "PLx5S7JmptoKl3YyOt4Wp910oBrQHMi7N7", title: "2025 U-12 香川県ジュニアサッカーリーグ" },
+                        { id: "PLx5S7JmptoKlf32cA0w1-00ERDljwckMp", title: "2025 U-12 CLE CLO Autumn Festival" },
+                        { id: "PLx5S7JmptoKnvhYx8CTK2Mtgw2_OhZtVV", title: "2025 U-11 アバンティカップ" },
+                        { id: "PLx5S7JmptoKnvhYx8CTK2Mtgw2_OhZtVV", title: "2025 U-11 J-Green Summer Cup" },
+                        { id: "PLx5S7JmptoKlPjCtE2ezB1jMYuopJiXks", title: "2025 U-11 高松市夏季サッカー大会" },
+                        { id: "PLx5S7JmptoKkuhmdPgQ-fn4v7VSvaPV1V", title: "2025 U-12 高商カーニバル" },
+                        { id: "PLx5S7JmptoKnPhfLGgH9l51pQR_TTluJT", title: "2025 U-12 FC DIAMOサマーフェスタ" },
+                        { id: "PLx5S7JmptoKnHhW4a3XcmMm2J6W4J-nxG", title: "2025 U-11 Unlock Fes" },
+                        { id: "PLx5S7JmptoKlJ2g42mmnjYxAQErAi_dk2", title: "2025 U-11 SFI-yama CUP" },
+                        { id: "PLx5S7JmptoKlLvZ6svac9pAxjw11GGen2", title: "2025 U-12 倉敷 football festival" },
+                        { id: "PLx5S7JmptoKmlbgkk3I5hSaS3LUCUAtWW", title: "2025 U-11 アイリスフェスティバル" },
+                        { id: "PLx5S7JmptoKm3IuzSug4MOsih60oSAvKf", title: "2025 U-12 マルナカカップ" },
+                        { id: "PLx5S7JmptoKmhL2TuznBfv98VDGPREBsS", title: "クーバー・カップ2025 U-11サッカー選手権大会" },
+                        { id: "PLx5S7JmptoKkrEUbuEYZCa-nvBg7pvq4o", title: "2025 チビリンピック in 四国" },
+                        { id: "PLx5S7JmptoKlvKpva4lis98izumJNlJbF", title: "2025 FC DIAMOスプリングフェスタ" },
+                        { id: "PLx5S7JmptoKn75i57jQ33_51rOu32p7TG", title: "2025 練習試合" },
+                    ]
+                },
+                {
+                    tab: "2024年度（U-10）",
+                    lists: [
+                        { id: "PLx5S7JmptoKm3rLYhoEoovE5EblzzZuif", title: "2024 UNITED SS TAKAMATSU" },
+                        { id: "PLx5S7JmptoKlLfEb_k8lu3VxVsj-XaJiW", title: "2025 U-10 さくらまつりサッカー大会" },
+                        { id: "PLx5S7JmptoKmmnBRTlwUvHOQymJ_4xTig", title: "2025 U-10 四国サッカー交歓会" },
+                        { id: "PLx5S7JmptoKn8K-nl5IRe3kHm7IIhEr2v", title: "2025 U-10 岡山遠征" },
+                        { id: "PLx5S7JmptoKlmxUzvh86eXoidzVz7a1T9", title: "2025 Pikaraカップサッカー大会" },
+                        { id: "PLx5S7JmptoKmvIMbX8UilE0ByT-rHsb1T", title: "2025 Vortis Cup U-10" },
+                        { id: "PLx5S7JmptoKlqn9ZdLmZLlqTGPSRvrMQh", title: "2025 U-10 高松市小学生サッカー大会" },
+                        { id: "PLx5S7JmptoKnU2khDSXpIArPvC0WPyENC", title: "2024 U-10 香川県ジュニアサッカーリーグ（前期）" },
+                        { id: "PLx5S7JmptoKkcu7pIfDY1ntrhehj3M5GZ", title: "2024 U-10 香川県ジュニアサッカーリーグ（後期）" },
+                        { id: "PLx5S7JmptoKlxxqQsvQPmb8n6VpZU1r2L", title: "2024 U-10 瀬戸大橋記念公園カップ" },
+                        { id: "PLx5S7JmptoKmQIEIXyytnGojHiIpXMI7R", title: "2024 U-10 高松地区ジュニアサッカー大会" },
+                        { id: "PLx5S7JmptoKl5PMRlJ3M4WFH_R0wjJNs4", title: "2024 U-10 りんくうカップサッカー大会" },
+                        { id: "PLx5S7JmptoKmMRLPoqxPyA9pdBmdHvZn0", title: "2024 U-10 高松北ロータリー杯" },
+                        { id: "PLx5S7JmptoKldUYXwPLlQaHPu1Crpvzbc", title: "2024 U-10 大阪遠征" },
+                        { id: "PLx5S7JmptoKnU0TRTf03TZnrnGelsnOx2", title: "2024 U-10 オータムフェスティバル" },
+                        { id: "PLx5S7JmptoKkodlRzyWTzbblieLSkCSlG", title: "2024 Vortis Cup U-10" },
+                        { id: "PLx5S7JmptoKm4FiFjEy-rQ4x6TKb1jFne", title: "2024 U-10 Amigas de futbol 坂出" },
+                        { id: "PLx5S7JmptoKkE4yl3q_gzu4vJGvjdfL21", title: "2024 FC DIAMOウインターフェスタ U-11" },
+                        { id: "PLx5S7JmptoKkCQO2QLtCoBbVim2AddUPZ", title: "2024 練習試合" },
+                    ]
+                },
+                {
+                    tab: "2023年度（U-9）",
+                    lists: [
+                        { id: "PLx5S7JmptoKnfKC2QsOZMD_Z_34MX0hSv", title: "2023 UNITED SS TAKAMATSU" },
+                        { id: "PLx5S7JmptoKmqJzAzhJb8xs10qDmLR2Rb", title: "2023 香川県U-9ミニサッカー大会" },
+                        { id: "PLx5S7JmptoKnPYPp8D7dzz5uwJq5-0yfv", title: "2023 U-10 高松市小学生サッカー大会" },
+                        { id: "PLx5S7JmptoKlKAqh4rZkfI6TDyTkwbpb7", title: "2023 U-9 新春サッカー大会" },
+                        { id: "PLx5S7JmptoKmmcDBuux-NdeRdSkS8O3ik", title: "2023 練習試合" }
+                    ]
+                },
+                {
+                    tab: "エンタメ動画",
+                    lists: [
+                        { id: "PLx5S7JmptoKk16VNdNjbMvm-ixl3B_aVT", title: "Team Cam" },
+                        { id: "PLx5S7JmptoKmmPav_ZTH-VZMRRCyj6bCp", title: "実況動画" },
+                        { id: "PLx5S7JmptoKnawTUv1L_vxxCA--FuBIj4", title: "ゴール集" },
+                        { id: "PLx5S7JmptoKlOomBO44dNibDWjCUCBtxu", title: "テレビ放送" },
+                        { id: "PLx5S7JmptoKkZAiAdsgdRgbOSCn3nFM2O", title: "徹底解説シリーズ" },
+                        { id: "PLx5S7JmptoKnTkl6k_qp9Fm0NOeeTb-Kb", title: "エンタメ動画【実況・ゴール集・他】" },
+                    ]
+                },
+                {
+                    tab: "その他",
+                    lists: [
+                        { id: "PLx5S7JmptoKngU_qk9bqphaWiJlWixegw", title: "2025 U-9 新春サッカー大会" },
+                        { id: "PLx5S7JmptoKmQX6S8CsQXjFRUPMz_IGi3", title: "2025 U-11 ジュニアチャンピオンシップ" },
+                        { id: "PLx5S7JmptoKmjuJauNVe-CPtgt9pLyGua", title: "2024 U-11 高松市夏季サッカー大会" },
+                        { id: "PLx5S7JmptoKlIa77gvXHGZRiUUPKGLvy1", title: "2024 U-11 香川県ジュニアサッカーリーグ（後期）" },
+                        { id: "PLx5S7JmptoKkGLZpxB9jdrWnMi6p3CFbu", title: "2024 U-12 香川県ジュニアサッカーリーグ（後期）" },
+                        { id: "PLx5S7JmptoKlvzHfhaErSLlgiokDXlcmF", title: "練習試合まとめ" }
+                    ]
+                }
+            ];
+
+        const contentContainer = document.querySelector('.content');
+
+        /**
+         * セクション名に応じたアイコン絵文字を返す関数
+         * @param {string} tabTitle - セクションのタイトル
+         * @returns {string} - 対応する絵文字
+         */
+        function getIconForTab(tabTitle) {
+            if (tabTitle.includes('年')) {
+                return '📅';
+            }
+            switch (tabTitle) {
+                case 'おすすめ再生リスト':
+                    return '⭐';
+                // ★ 「エンタメ動画」のケースを追加
+                case 'エンタメ動画':
+                    return '▶️';
+                case 'その他':
+                    return '➕';
+                default:
+                    return '';
+            }
+        }
+
+        /**
+         * ページ全体のレイアウトを生成する関数
+         */
+        function buildLayout() {
+            data.forEach(sectionData => {
+                const section = document.createElement('div');
+                section.className = 'section';
+                
+                const iconEmoji = getIconForTab(sectionData.tab);
+                const iconSpan = iconEmoji ? `<span class="icon">${iconEmoji}</span>` : '';
+                section.innerHTML = `<h2>${iconSpan}${sectionData.tab}</h2>`;
+
+                const horizontalList = document.createElement('div');
+                horizontalList.className = 'horizontal-video-list';
+
+                sectionData.lists.forEach(list => {
+                    // 「おすすめ動画」のセクションだけ大きいサムネイルを適用
+                    const itemClassName = (sectionData.tab === 'おすすめ再生リスト') 
+                        ? 'featured-scroll-item' 
+                        : 'video-item';
+
+                    const thumbnailPath = `thumbnail/${list.id}.jpg`;
+                    const videoItem = document.createElement('div');
+                    videoItem.className = itemClassName;
+                    videoItem.innerHTML = `
+                        <a href="https://www.youtube.com/playlist?list=${list.id}" target="_blank">
+                            <img src="${thumbnailPath}" alt="${list.title}" onerror="this.src='thumbnail/default.jpg';">
+                        </a>
+                        <p class="video-title">
+                            <a href="https://www.youtube.com/playlist?list=${list.id}" target="_blank">${list.title}</a>
+                        </p>
+                    `;
+                    horizontalList.appendChild(videoItem);
+                });
+
+                section.appendChild(horizontalList);
+                contentContainer.appendChild(section);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", buildLayout);
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+    </script>
+</body>
+</html>
