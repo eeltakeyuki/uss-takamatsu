@@ -1,4 +1,4 @@
-const CACHE_NAME = 'uss-takamatsu-v1';
+const CACHE_NAME = 'uss-takamatsu-v2';
 const STATIC_ASSETS = [
   './index.html',
   './manifest.json',
