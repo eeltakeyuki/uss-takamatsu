@@ -355,8 +355,24 @@
 
         document.addEventListener("DOMContentLoaded", buildLayout);
 
+        // --- ★ PWA自動更新検知 & リロード処理の追加 ---
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
+            let refreshing = false;
+
+            // 新しいService Workerが有効化（即時適用）された時に一度だけページを自動リロード
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            });
+
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(registration => {
+                    // ページアクセス時にサーバーへsw.jsの更新確認を行う
+                    registration.update();
+                });
+            });
         }
     </script>
 </body>
