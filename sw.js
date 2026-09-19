@@ -1,4 +1,4 @@
-const CACHE_NAME = 'uss-takamatsu-v9'; // ★更新時はここを v2, v3... と書き換えます
+const CACHE_NAME = 'uss-takamatsu-v10'; // ★更新時はここを v2, v3... と書き換えます
 const STATIC_ASSETS = [
   './index.html',
   './manifest.json',
